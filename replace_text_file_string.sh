@@ -4,13 +4,14 @@
 
 if [ "$#" -ne 3 ]; then
         echo "Error: Send 3 parameters."
+        exit
 fi
 
 # check if first parameter is a valid file path
 
 if ! [ -e $1 ]; then
-        echo "First parameter has to be a valid file path."
-        echo "File does't exist."
+        echo "File doesn't exist. First parameter has to be a valid file path."
+        exit
 fi
 
 ## should you check if file access modifier let's you copy?
@@ -22,3 +23,4 @@ new_file_name="$original_file_name-_changed.txt"
 echo $original_file_name
 echo $directory_path
 echo $new_file_name
+
