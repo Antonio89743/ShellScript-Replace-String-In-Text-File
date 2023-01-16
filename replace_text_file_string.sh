@@ -2,13 +2,19 @@
 
 # Check if there are 3 parameters
 if [ "$#" -ne 3 ]; then
-        echo "Error: Send 3 parameters."
+        echo "Error: Enter 3 parameters."
         exit
 fi
 
 # Check if first parameter is a valid file path
 if ! [ -e $1 ]; then
         echo "File doesn't exist. First parameter has to be a valid file path."
+        exit
+fi
+
+# Check if values of second and third parameters match
+if [[ $2 == $3 ]]; then
+        echo "Values of second and third parameter match."
         exit
 fi
 
@@ -28,3 +34,12 @@ new_file="$directory_path""/""$original_file_name""_changed.""$extension"
 ## place the result in the _changed file 
 
 ## you could just place func to replace string before >$new_file, so you can create and fill that new_file in one line
+
+
+ ## sed -i "s/$2/$3/" $1 >$new_file
+ perl -i  -lpe '$chnage_counter+= s/$2/$3/g; END{print "$chnage_counter"}' $1 > $new_file
+ echo $chnage_counter
+ 
+ ## korisniku izbaci na ekran koliko je promjena napravljeno
+ 
+ ## should you put a \ before an asterisk?
