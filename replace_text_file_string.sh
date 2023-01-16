@@ -16,12 +16,14 @@ fi
 
 ## should you check if file access modifier let's you copy?
 
-
+# create empty -changed file
 directory_path="${1%/*}"
 original_file_name_with_extension="$(basename $1)"
 original_file_name="${original_file_name_with_extension%.*}"
-new_file_name="$original_file_name""_changed.txt"
-echo $original_file_name
-echo $directory_path
-echo $new_file_name
+extension="${original_file_name_with_extension##*.}"
+new_file="$directory_path""/""$original_file_name""_changed.""$extension"
+>$new_file
 
+## get text from old file
+## replace args
+## place the result in the _changed file 
