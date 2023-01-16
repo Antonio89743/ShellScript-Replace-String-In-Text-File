@@ -18,8 +18,9 @@ fi
 
 
 directory_path="${1%/*}"
-original_file_name="$(basename $1)"
-new_file_name="$original_file_name-_changed.txt"
+original_file_name_with_extension="$(basename $1)"
+original_file_name="${original_file_name_with_extension%.*}"
+new_file_name="$original_file_name""_changed.txt"
 echo $original_file_name
 echo $directory_path
 echo $new_file_name
