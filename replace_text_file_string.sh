@@ -19,7 +19,6 @@ if [[ $2 == $3 ]]; then
 fi
 
 ## should you check if file access modifier let's you copy from old file?
-## should you check if file changed already exists
 
 # Create empty -changed file
 directory_path="${1%/*}"
@@ -27,11 +26,9 @@ original_file_name_with_extension="$(basename $1)"
 original_file_name="${original_file_name_with_extension%.*}"
 extension="${original_file_name_with_extension##*.}"
 new_file="$directory_path""/""$original_file_name""_changed.""$extension"
-cp $1 $new_file
 
-## get text from old file
-## replace args
-## place the result in the _changed file
+## is the line below needed? what if the file already exists, so you just need to override it?
+cp $1 $new_file
 
 ## you could just place func to replace string before >$new_file, so you can create and fill that new_file in one line
 
@@ -40,6 +37,8 @@ awk -v OLD=$2 -v NEW=$3 '
     END{print count " substitutions occured."}
 ' "$new_file">>$new_file 
 
+tail -1 $new_file 
+sed -i '$d' $new_file  
 
 #sed -i "s/$2/$3/" $new_file
 
@@ -52,6 +51,6 @@ awk -v OLD=$2 -v NEW=$3 '
 #       $change_counter=$change_counter+1
 #fi
 #echo $change_counter
- ## korisniku izbaci na ekran koliko je promjena napravljeno
 
+ ## korisniku izbaci na ekran koliko je promjena napravljeno
  ## should you put a \ before an asterisk?
