@@ -27,19 +27,31 @@ original_file_name_with_extension="$(basename $1)"
 original_file_name="${original_file_name_with_extension%.*}"
 extension="${original_file_name_with_extension##*.}"
 new_file="$directory_path""/""$original_file_name""_changed.""$extension"
->$new_file
+cp $1 $new_file
 
 ## get text from old file
 ## replace args
-## place the result in the _changed file 
+## place the result in the _changed file
 
 ## you could just place func to replace string before >$new_file, so you can create and fill that new_file in one line
 
+awk -v OLD=$2 -v NEW=$3 '
+    ($0 ~ OLD) {gsub(OLD, NEW); count++}1
+    END{print count " substitutions occured."}
+' "$new_file">>$new_file 
 
- ## sed -i "s/$2/$3/" $1 >$new_file
- perl -i  -lpe '$chnage_counter+= s/$2/$3/g; END{print "$chnage_counter"}' $1 > $new_file
- echo $chnage_counter
- 
+
+#sed -i "s/$2/$3/" $new_file
+
+#perl -i  -lpe '$chnage_counter+= s/$2/$3/g; END{print "$chnage_counter"}' $new_file
+#echo $chnage_counter
+#perl -i  -lpe '$k+= s/$2/$3/g; END{print "$k"}' $new_file
+#change_counter=0
+#sed -i "s/$2/$3/g;" $new_file
+#if [ -s changelog.txt ]; then
+#       $change_counter=$change_counter+1
+#fi
+#echo $change_counter
  ## korisniku izbaci na ekran koliko je promjena napravljeno
- 
+
  ## should you put a \ before an asterisk?
