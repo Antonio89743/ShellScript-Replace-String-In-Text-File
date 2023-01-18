@@ -32,6 +32,9 @@ extension="${original_file_name_with_extension##*.}"
 new_file="$directory_path""/""$original_file_name""_changed.""$extension"
 string_to_replace=$2
 
+# Check if second parameter features an asterisk  
+# If it does, and if the asterisk is the last character of argument
+# string_to_replace will lose the asterisk so that the asterisk isn't left behind as a result
 if [[ $2 =~ .*\*.* ]]; then
         if [[ ${2: -1} == "*" ]]; then
                 string_to_replace=${2::-1}
