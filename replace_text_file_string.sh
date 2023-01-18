@@ -18,16 +18,30 @@ if [[ $2 == $3 ]]; then
         exit
 fi
 
+# Check if third parameter features *
+if [[ $3 =~ .*\*.* ]]; then
+        echo "Third parameter cannot contain *."
+        exit
+fi
+
 # Get file name, path and extension
 directory_path="${1%/*}"
 original_file_name_with_extension="$(basename $1)"
 original_file_name="${original_file_name_with_extension%.*}"
 extension="${original_file_name_with_extension##*.}"
 new_file="$directory_path""/""$original_file_name""_changed.""$extension"
+string_to_replace=$2
 
-# Replace content old file and put the replaced content in a new file
-awk -v OLD=$2 -v NEW=$3 '
-    ($0 ~ OLD) {gsub(OLD, NEW); count++}1
+if [[ $2 =~ .*\*.* ]]; then
+        echo "Contains"
+        if [[ ${2: -1} == "*" ]]; then
+                string_to_replace=${2::-1}
+        fi
+fi
+
+# Copy content of old file in _changed file and replace old value with new value
+awk -v OLD=$string_to_replace -v NEW=$3 '
+    ($0 == OLD) {gsub(OLD, NEW); count++}1
     END{print count " substitutions occured."}
 ' "$1">$new_file
 
