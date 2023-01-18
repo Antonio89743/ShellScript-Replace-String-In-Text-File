@@ -33,7 +33,6 @@ new_file="$directory_path""/""$original_file_name""_changed.""$extension"
 string_to_replace=$2
 
 if [[ $2 =~ .*\*.* ]]; then
-        echo "Contains"
         if [[ ${2: -1} == "*" ]]; then
                 string_to_replace=${2::-1}
         fi
