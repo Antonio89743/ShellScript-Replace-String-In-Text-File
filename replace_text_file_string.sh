@@ -37,8 +37,7 @@ if [[ $2 =~ .*\*.* ]]; then
                 string_to_replace=${2::-1}
         fi
 fi
-
-# Copy content of old file in _changed file and replace old value with new value
+# Replace values in contents of file and store changes in a _changed file 
 awk -v OLD=$string_to_replace -v NEW=$3 '
     ($0 == OLD) {gsub(OLD, NEW); count++}1
     END{print count " substitutions occured."}
