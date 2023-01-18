@@ -37,6 +37,10 @@ awk -v OLD=$2 -v NEW=$3 '
     END{print count " substitutions occured."}
 ' "$new_file">>$new_file 
 
+# maybe rome the 1 after }
+# put /OLD/ instead of OLD in gsub
+# maybe put NEW in ""
+
 tail -1 $new_file 
 sed -i '$d' $new_file  
 
