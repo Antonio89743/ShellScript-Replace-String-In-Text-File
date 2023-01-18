@@ -25,6 +25,7 @@ original_file_name="${original_file_name_with_extension%.*}"
 extension="${original_file_name_with_extension##*.}"
 new_file="$directory_path""/""$original_file_name""_changed.""$extension"
 
+# Replace content old file and put the replaced content in a new file
 awk -v OLD=$2 -v NEW=$3 '
     ($0 ~ OLD) {gsub(OLD, NEW); count++}1
     END{print count " substitutions occured."}
