@@ -20,8 +20,8 @@ fi
 
 # Check if third parameter features *
 if [[ $3 =~ .*\*.* ]]; then
-        echo "Third parameter cannot contain *."
-        exit
+	echo "Third parameter cannot contain *."
+	exit
 fi
 
 # Get file name, path and extension
@@ -31,20 +31,27 @@ original_file_name="${original_file_name_with_extension%.*}"
 extension="${original_file_name_with_extension##*.}"
 new_file="$directory_path""/""$original_file_name""_changed.""$extension"
 string_to_replace=$2
+close_match=false
 
-# Check if second parameter features an asterisk  
-# If it does, and if the asterisk is the last character of argument
-# string_to_replace will lose the asterisk so that the asterisk isn't left behind as a result
 if [[ $2 =~ .*\*.* ]]; then
-        if [[ ${2: -1} == "*" ]]; then
-                string_to_replace=${2::-1}
-        fi
+	if [[ ${2: -1} == "*" ]]; then
+		string_to_replace=${2::-1}
+		close_match=true
+	fi
 fi
-# Replace values in contents of file and store changes in a _changed file 
-awk -v OLD=$string_to_replace -v NEW=$3 '
-    ($0 == OLD) {gsub(OLD, NEW); count++}1
-    END{print count " substitutions occured."}
-' "$1">$new_file
+
+# Copy content of old file in _changed file and replace old value with new value
+if [ "$close_match" = true ]; then
+	awk -v OLD=$string_to_replace -v NEW=$3 '
+	    ($0 = OLD) {gsub(OLD, NEW); count++}1
+	    END{print count " substitutions occured."}
+	' "$1">$new_file
+else
+	awk -v OLD=$string_to_replace -v NEW=$3 '
+	    ($0 == OLD) {gsub(OLD, NEW); count++}1
+	    END{print count " substitutions occured."}
+	' "$1">$new_file
+fi
 
 # Print number of changes in terminal
 tail -1 $new_file
