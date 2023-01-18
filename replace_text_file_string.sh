@@ -33,6 +33,10 @@ new_file="$directory_path""/""$original_file_name""_changed.""$extension"
 string_to_replace=$2
 close_match=false
 
+# If second parameter features an asterisk
+# If the asterisk is the last character of second parameter
+# Remove the asterisk, so it won't get left behind after replacing
+# For replace function, do close match rather than indentical match
 if [[ $2 =~ .*\*.* ]]; then
 	if [[ ${2: -1} == "*" ]]; then
 		string_to_replace=${2::-1}
