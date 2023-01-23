@@ -29,7 +29,15 @@ directory_path="${1%/*}"
 original_file_name_with_extension="$(basename $1)"
 original_file_name="${original_file_name_with_extension%.*}"
 extension="${original_file_name_with_extension##*.}"
-new_file="$directory_path""/""$original_file_name""_changed.""$extension"
+
+if [[ "$1" == *\/* ]] || [[ "$1" == *\\* ]]; then
+        new_file="$directory_path""/""$original_file_name""_changed.""$extension"
+else
+        new_file="$original_file_name""_changed.""$extension"
+fi
+
+
+xxnew_file="$directory_path""/""$original_file_name""_changed.""$extension"
 string_to_replace=$2
 close_match=false
 
@@ -38,23 +46,23 @@ close_match=false
 # Remove the asterisk, so it won't get left behind after replacing
 # For replace function, do close match rather than indentical match
 if [[ $2 =~ .*\*.* ]]; then
-	if [[ ${2: -1} == "*" ]]; then
-		string_to_replace=${2::-1}
-		close_match=true
-	fi
+        if [[ ${2: -1} == "*" ]]; then
+                string_to_replace=${2::-1}
+                close_match=true
+        fi
 fi
 
 # Copy content of old file in _changed file and replace old value with new value
 if [ "$close_match" = true ]; then
-	awk -v OLD=$string_to_replace -v NEW=$3 '
-	    ($0 = OLD) {gsub(OLD, NEW); count++}1
-	    END{print count " substitutions occured."}
-	' "$1">$new_file
+        awk -v OLD=$string_to_replace -v NEW=$3 '
+            ($0 = OLD) {gsub(OLD, NEW); count++}1
+            END{print count " substitutions occured."} '
+        "$1">$new_file
 else
-	awk -v OLD=$string_to_replace -v NEW=$3 '
-	    ($0 == OLD) {gsub(OLD, NEW); count++}1
-	    END{print count " substitutions occured."}
-	' "$1">$new_file
+        awk -v OLD=$string_to_replace -v NEW=$3 '
+            ($0 == OLD) {gsub(OLD, NEW); count++}1
+            END{print count " substitutions occured."} '
+         "$1">$new_file
 fi
 
 # Print number of changes in terminal
