@@ -29,17 +29,23 @@ directory_path="${1%/*}"
 original_file_name_with_extension="$(basename $1)"
 original_file_name="${original_file_name_with_extension%.*}"
 extension="${original_file_name_with_extension##*.}"
+string_to_replace=$2
+close_match=false
 
-if [[ "$1" == *\/* ]] || [[ "$1" == *\\* ]]; then
+##################################################
+xxnew_file="$directory_path""/""$original_file_name""_changed.""$extension"
+
+#####maybe do =~ instead of ==
+
+# Check if path to file contains a folder
+if [[ $1 == *\/* ]] || [[ $1 == *\\* ]]; then
         new_file="$directory_path""/""$original_file_name""_changed.""$extension"
 else
         new_file="$original_file_name""_changed.""$extension"
 fi
 
 
-xxnew_file="$directory_path""/""$original_file_name""_changed.""$extension"
-string_to_replace=$2
-close_match=false
+##################################################
 
 # If second parameter features an asterisk
 # If the asterisk is the last character of second parameter
@@ -56,12 +62,14 @@ fi
 if [ "$close_match" = true ]; then
         awk -v OLD=$string_to_replace -v NEW=$3 '
             ($0 = OLD) {gsub(OLD, NEW); count++}1
-            END{print count " substitutions occured."} '
+	    END{system(echo "$count substitutions occured.")} '
+   ####         END{print count " substitutions occured."} '
         "$1">$new_file
 else
         awk -v OLD=$string_to_replace -v NEW=$3 '
             ($0 == OLD) {gsub(OLD, NEW); count++}1
-            END{print count " substitutions occured."} '
+	    END{system(echo "$count substitutions occured.")} '
+   ####         END{print count " substitutions occured."} '
          "$1">$new_file
 fi
 
